@@ -1,127 +1,76 @@
 # AI Slop
 
-![AI Slop Logo](static/images/favicon.ico)
+A modern web platform for showcasing AI-assisted projects with a futuristic cyberpunk design.
 
-## 🚀 About AI Slop
+![AI Slop Screenshot](static/images/screenshot.jpg)
 
-AI Slop is a modern web platform showcasing projects built with AI assistance, demonstrating the power of human-AI collaboration. The platform features a futuristic, cyberpunk-inspired design with advanced animations and interactive elements.
+## About
 
-## ✨ Features
+AI Slop is a Django-based website where users can share and discover projects built with AI assistance. The platform features a sleek, futuristic UI with interactive animations and a collection of mini-games.
 
-### 🏠 Home Page
-- Animated hero section with parallax effects and a bouncing ball in a rotating tesseract
-- Featured projects showcase with hover effects
-- Latest projects and blog posts sections
-- Call-to-action for project submissions
+## Features
 
-### 📁 Projects
-- Browse projects by category or tag
-- Detailed project pages with descriptions, images, and links
-- Filter projects by AI tools used
-- User project submission system
+- **Project Showcase**: Browse and share AI-assisted projects
+- **User Authentication**: Register, login, and manage your profile
+- **Blog System**: Read and write articles about AI technology
+- **Mini-Games**: Play retro games like Pong with AI opponents
+- **Responsive Design**: Works on desktop and mobile devices
 
-### 📝 Blog
-- Latest insights about AI and technology
-- Rich text content with images and code snippets
-- Category and tag filtering
+## Mini-Games
 
-### 🎮 Mini-Games
-- Built-in browser games with futuristic design
-- **Pong**: Classic arcade game with AI opponent
-  - Three difficulty levels (Easy, Medium, Hard)
-  - Mouse or keyboard controls
-  - Score tracking and win conditions
-- More games coming soon (Tetris, Pac-Man, Chess)
+Take a break and enjoy our collection of browser-based games:
 
-### 👤 User System
-- User registration and authentication
-- Email verification
-- Password reset functionality
-- User profiles with project management
-- Secure logout process
+- **Pong**: The classic arcade game with adjustable AI difficulty
+- More games coming soon!
 
-## 🎨 Design Elements
-
-- **Cyberpunk Aesthetic**: Dark theme with neon accents
-- **Interactive Animations**: Particle effects, glitch text, scanner effects
-- **Futuristic UI**: Cyber cards, neon buttons, holographic elements
-- **Responsive Design**: Fully responsive on all devices
-
-## 🛠️ Technical Details
-
-### Built With
-- **Backend**: Django 5.1
-- **Frontend**: HTML5, CSS3, JavaScript
-- **Database**: SQLite (development) / PostgreSQL (production)
-- **Authentication**: Django's built-in auth system with custom extensions
-- **Text Editor**: CKEditor for rich text content
-- **Styling**: Custom CSS with Bootstrap 5 framework
-
-### Key Components
-- Custom user authentication flow with email verification
-- Project submission and management system
-- Canvas-based game implementations
-- Advanced CSS animations and effects
-- Responsive image handling
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
+
 - Python 3.8+
-- pip
-- virtualenv (recommended)
+- Django 5.1+
+- Other dependencies in requirements.txt
 
 ### Installation
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/yourusername/ai_slop.git
-   cd ai_slop
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/ai-slop.git
+   cd ai-slop
    ```
 
-2. Create and activate a virtual environment
-   ```bash
+2. Create and activate a virtual environment:
+   ```
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Install dependencies
-   ```bash
+3. Install dependencies:
+   ```
    pip install -r requirements.txt
    ```
 
-4. Apply migrations
-   ```bash
+4. Run migrations:
+   ```
    python manage.py migrate
    ```
 
-5. Create a superuser
-   ```bash
+5. Create a superuser:
+   ```
    python manage.py createsuperuser
    ```
 
-6. Run the development server
-   ```bash
+6. Start the development server:
+   ```
    python manage.py runserver
    ```
 
-7. Visit `http://127.0.0.1:8000/` in your browser
+7. Visit http://127.0.0.1:8000/ in your browser
 
-## 📸 Screenshots
+## Contributing
 
-*[Add screenshots of key pages here]*
+Contributions are welcome! Feel free to submit a pull request or open an issue.
 
-## 🤝 Contributing
+## License
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgements
-
-- [Django](https://www.djangoproject.com/)
-- [Bootstrap](https://getbootstrap.com/)
-- [Font Awesome](https://fontawesome.com/)
-- Special thanks to all contributors and the AI tools that helped build this project 
+This project is licensed under the MIT License - see the LICENSE file for details. 
