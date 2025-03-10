@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "projects.apps.ProjectsConfig",
     "blog.apps.BlogConfig",
+    "games.apps.GamesConfig",
 ]
 
 MIDDLEWARE = [

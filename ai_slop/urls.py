@@ -64,6 +64,9 @@ urlpatterns = [
              template_name='core/password_reset_complete.html'
          ), 
          name='password_reset_complete'),
+    
+    # Games app
+    path("games/", include("games.urls")),
 ]
 
 if settings.DEBUG:
