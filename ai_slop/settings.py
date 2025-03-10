@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",  # ASGI server for Django Channels
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,12 +44,13 @@ INSTALLED_APPS = [
     "crispy_forms",
     "taggit",
     "ckeditor",
+    "channels",  # Django Channels for WebSockets
     
     # Local apps
     "core.apps.CoreConfig",
     "projects.apps.ProjectsConfig",
     "blog.apps.BlogConfig",
-    "games.apps.GamesConfig",
+    "games.apps.GamesConfig",  # Add the games app
 ]
 
 MIDDLEWARE = [
@@ -81,6 +83,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ai_slop.wsgi.application"
+ASGI_APPLICATION = "ai_slop.asgi.application"  # ASGI application for Channels
+
+# Channel layers configuration
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 
 # Database

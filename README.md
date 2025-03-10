@@ -18,10 +18,9 @@ AI Slop is a Django-based website where users can share and discover projects bu
 
 ## Mini-Games
 
-Take a break and enjoy our collection of browser-based games:
+Take a break and enjoy our browser-based game:
 
 - **Pong**: The classic arcade game with adjustable AI difficulty
-- More games coming soon!
 
 ## Getting Started
 

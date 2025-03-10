@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Slop - Multiplayer Pong{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+<style>
+    .game-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        border: 2px solid var(--neon-cyan);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 40px;
+        min-height: 400px;
+    }
+    
+    .game-header {
+        position: relative;
+        padding: 40px 0;
+        text-align: center;
+        overflow: hidden;
+    }
+    
+    .game-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%),
+            linear-gradient(45deg, rgba(122, 90, 248, 0.1) 0%, transparent 100%);
+        z-index: -1;
+    }
+    
+    .game-title {
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+    
+    .back-button {
+        margin-top: 20px;
+    }
+    
+    .ar-corner-tl, .ar-corner-tr, .ar-corner-bl, .ar-corner-br {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        z-index: 2;
+    }
+    
+    .ar-corner-tl {
+        top: 0;
+        left: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-tr {
+        top: 0;
+        right: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-bl {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-br {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+    
+    .matchmaking-container {
+        text-align: center;
+    }
+    
+    .queue-status {
+        margin: 30px 0;
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--neon-cyan);
+    }
+    
+    .queue-spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(0, 240, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: var(--neon-cyan);
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+        display: none;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .private-game-container {
+        margin-top: 40px;
+        padding-top: 30px;
+        border-top: 1px solid rgba(0, 240, 255, 0.3);
+    }
+    
+    .private-game-input {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--neon-cyan);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-right: 10px;
+        font-family: 'Share Tech Mono', monospace;
+    }
+    
+    .private-game-input:focus {
+        outline: none;
+        box-shadow: 0 0 10px var(--neon-cyan);
+    }
+    
+    .action-btn {
+        position: relative;
+        background: transparent;
+        color: var(--neon-cyan);
+        border: 1px solid var(--neon-cyan);
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-family: 'Share Tech Mono', monospace;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px 5px;
+    }
+    
+    .action-btn:hover {
+        background: rgba(0, 240, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+    
+    .action-btn.btn-join-queue {
+        background: rgba(0, 240, 255, 0.1);
+    }
+    
+    .action-btn.btn-leave-queue {
+        background: rgba(255, 0, 0, 0.1);
+        color: #ff5555;
+        border-color: #ff5555;
+        display: none;
+    }
+    
+    .action-btn.btn-leave-queue:hover {
+        background: rgba(255, 0, 0, 0.2);
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    
+    .step-number {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        font-family: 'Share Tech Mono', monospace;
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ==================== GAME HEADER ==================== -->
+<section class="game-header cyber-bg">
+    <div class="container">
+        <h1 class="cyber-glitch mb-4" data-text="MULTIPLAYER PONG">MULTIPLAYER PONG</h1>
+        <p class="lead text-light">Play against other players in real-time!</p>
+    </div>
+</section>
+
+<!-- ==================== MATCHMAKING SECTION ==================== -->
+<section class="py-5 cyber-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Matchmaking Container -->
+                <div class="game-container ar-frame">
+                    <div class="ar-corner-tl"></div>
+                    <div class="ar-corner-tr"></div>
+                    <div class="ar-corner-bl"></div>
+                    <div class="ar-corner-br"></div>
+                    
+                    <div class="matchmaking-container">
+                        <h2 class="game-title">Matchmaking</h2>
+                        <p class="text-light">Find an opponent to play against in real-time!</p>
+                        
+                        <div class="queue-spinner" id="queueSpinner"></div>
+                        <div class="queue-status" id="queueStatus">Ready to join matchmaking</div>
+                        
+                        <button id="joinQueueBtn" class="action-btn btn-join-queue">
+                            <i class="fas fa-search me-2"></i> Find Opponent
+                        </button>
+                        
+                        <button id="leaveQueueBtn" class="action-btn btn-leave-queue">
+                            <i class="fas fa-times me-2"></i> Leave Queue
+                        </button>
+                        
+                        <div class="private-game-container">
+                            <h3 class="mb-4 text-light">Private Game</h3>
+                            <p class="text-light-50">Play with a friend by creating a private game room or joining an existing one.</p>
+                            
+                            <div class="mt-4">
+                                <div class="mb-4">
+                                    <span class="step-number">1</span>
+                                    <span class="text-light">Create a new room:</span>
+                                    <div class="mt-2">
+                                        <button id="createRoomBtn" class="action-btn">
+                                            <i class="fas fa-plus me-2"></i> Create Room
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <span class="step-number">2</span>
+                                    <span class="text-light">Or join with a room code:</span>
+                                    <div class="mt-2">
+                                        <input type="text" id="roomCodeInput" class="private-game-input" placeholder="Enter room code">
+                                        <button id="joinRoomBtn" class="action-btn">
+                                            <i class="fas fa-sign-in-alt me-2"></i> Join Room
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center back-button">
+                    <a href="{% url 'games:pong' %}" class="cyber-button">
+                        <i class="fas fa-robot me-2"></i> Play vs AI
+                    </a>
+                    <a href="{% url 'games:game_list' %}" class="cyber-button">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Games
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/futuristic.js' %}"></script>
+<script src="{% static 'js/pong-multiplayer.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize glitch effect
+        if (typeof initGlitchEffect === 'function') {
+            initGlitchEffect();
+        }
+        
+        // Initialize AR frames
+        if (typeof initARFrames === 'function') {
+            initARFrames();
+        }
+        
+        // Elements
+        const joinQueueBtn = document.getElementById('joinQueueBtn');
+        const leaveQueueBtn = document.getElementById('leaveQueueBtn');
+        const queueStatus = document.getElementById('queueStatus');
+        const queueSpinner = document.getElementById('queueSpinner');
+        const createRoomBtn = document.getElementById('createRoomBtn');
+        const joinRoomBtn = document.getElementById('joinRoomBtn');
+        const roomCodeInput = document.getElementById('roomCodeInput');
+        
+        // Initialize matchmaking handler
+        const matchmaking = new MatchmakingHandler();
+        
+        // Set up callbacks
+        matchmaking.connect({
+            onConnectionEstablished: function(data) {
+                console.log('Player ID:', data.player_id);
+            },
+            onQueueJoined: function(data) {
+                queueStatus.textContent = data.message;
+                queueSpinner.style.display = 'block';
+                joinQueueBtn.style.display = 'none';
+                leaveQueueBtn.style.display = 'inline-block';
+            },
+            onQueueLeft: function(data) {
+                queueStatus.textContent = 'Ready to join matchmaking';
+                queueSpinner.style.display = 'none';
+                joinQueueBtn.style.display = 'inline-block';
+                leaveQueueBtn.style.display = 'none';
+            },
+            onGameFound: function(data) {
+                window.location.href = `/games/pong/multiplayer/${data.room_id}/`;
+            },
+            onError: function(error) {
+                queueStatus.textContent = 'Connection error. Please try again.';
+                queueSpinner.style.display = 'none';
+                joinQueueBtn.style.display = 'inline-block';
+                leaveQueueBtn.style.display = 'none';
+            }
+        });
+        
+        // Event listeners
+        joinQueueBtn.addEventListener('click', function() {
+            matchmaking.joinQueue();
+            
+            queueStatus.textContent = 'Finding an opponent...';
+            queueSpinner.style.display = 'block';
+            joinQueueBtn.style.display = 'none';
+            leaveQueueBtn.style.display = 'inline-block';
+        });
+        
+        leaveQueueBtn.addEventListener('click', function() {
+            matchmaking.leaveQueue();
+            
+            queueStatus.textContent = 'Ready to join matchmaking';
+            queueSpinner.style.display = 'none';
+            joinQueueBtn.style.display = 'inline-block';
+            leaveQueueBtn.style.display = 'none';
+        });
+        
+        createRoomBtn.addEventListener('click', function() {
+            // Generate a random room code
+            const roomCode = Math.random().toString(36).substring(2, 8);
+            window.location.href = `/games/pong/multiplayer/${roomCode}/`;
+        });
+        
+        joinRoomBtn.addEventListener('click', function() {
+            const roomCode = roomCodeInput.value.trim();
+            if (roomCode) {
+                window.location.href = `/games/pong/multiplayer/${roomCode}/`;
+            } else {
+                alert('Please enter a room code');
+            }
+        });
+        
+        // Allow enter key to join room
+        roomCodeInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                joinRoomBtn.click();
+            }
+        });
+    });
+</script>
+{% endblock %} 
