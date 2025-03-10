@@ -9,11 +9,50 @@
     
     <!-- ===== SEO Meta Tags ===== -->
     <meta name="description" content="{% block meta_description %}AI Slop showcases projects built with AI assistance, demonstrating the power of human-AI collaboration.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}AI, artificial intelligence, projects, portfolio, collaboration{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}AI, artificial intelligence, projects, portfolio, collaboration, AI games, multiplayer games, pong game{% endblock %}">
+    <meta name="author" content="AI Slop Team">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- ===== Canonical URL ===== -->
+    <link rel="canonical" href="{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    
+    <!-- ===== Open Graph Tags (for social sharing) ===== -->
+    <meta property="og:title" content="{% block og_title %}{{ self.title }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ self.meta_description }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'images/screenshot.jpg' %}{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:site_name" content="AI Slop">
+    
+    <!-- ===== Twitter Card Tags ===== -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ self.title }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ self.meta_description }}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{% static 'images/screenshot.jpg' %}{% endblock %}">
+    
+    <!-- ===== Structured Data (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "{% block schema_type %}WebSite{% endblock %}",
+        "name": "AI Slop",
+        "url": "{{ request.build_absolute_uri }}",
+        "description": "{{ self.meta_description }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ request.scheme }}://{{ request.get_host }}/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+        {% block additional_schema %}{% endblock %}
+    }
+    </script>
     
     <!-- ==================== STYLESHEETS ==================== -->
     <!-- ===== Favicon ===== -->
     <link rel="icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/apple-touch-icon.png' %}">
     
     <!-- ===== Bootstrap CSS ===== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

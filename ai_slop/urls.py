@@ -21,11 +21,20 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from core.views import CustomLoginView, RegisterView
+from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
+from .sitemaps import StaticViewSitemap, GamesSitemap
 
 # Customize admin site
 admin.site.site_header = 'AI Slop Administration'
 admin.site.site_title = 'AI Slop Admin'
 admin.site.index_title = 'Admin Dashboard'
+
+# Define sitemaps dictionary
+sitemaps = {
+    'static': StaticViewSitemap,
+    'games': GamesSitemap,
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -67,6 +76,10 @@ urlpatterns = [
     
     # Games app
     path("games/", include("games.urls")),
+    
+    # SEO URLs
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
+    path('robots.txt', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 ]
 
 if settings.DEBUG:

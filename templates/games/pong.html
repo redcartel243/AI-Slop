@@ -1,7 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}AI Slop - Pong{% endblock %}
+{% block title %}AI Slop - Pong Game | Play Against AI with Adjustable Difficulty{% endblock %}
+
+{% block meta_description %}Play the classic Pong arcade game against an AI opponent with adjustable difficulty levels. Test your reflexes and skills in this modern version of the iconic video game that started it all.{% endblock %}
+
+{% block meta_keywords %}pong game, play pong online, pong against AI, classic arcade game, retro games, adjustable difficulty pong, free online pong, browser pong{% endblock %}
+
+{% block og_title %}Classic Pong Game with AI Opponent | AI Slop{% endblock %}
+{% block og_description %}Challenge our AI in the game that started the video game revolution. Choose your difficulty level and test your reflexes in this modern version of Pong.{% endblock %}
+{% block og_type %}game{% endblock %}
+
+{% block schema_type %}VideoGame{% endblock %}
+{% block additional_schema %}
+,"applicationCategory": "Game",
+"operatingSystem": "Web Browser",
+"gamePlatform": "Web Browser",
+"genre": "Arcade",
+"gameMode": "SinglePlayer",
+"numberOfPlayers": {
+    "@type": "QuantitativeValue",
+    "minValue": 1,
+    "maxValue": 1
+}
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">

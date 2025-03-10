@@ -1,7 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}AI Slop - Multiplayer Pong{% endblock %}
+{% block title %}AI Slop - Multiplayer Pong Room {{ room_id }} | Real-time Online Gameplay{% endblock %}
+
+{% block meta_description %}Join this private Pong game room and play against another player in real-time. Use your mouse or keyboard to control your paddle and be the first to reach 10 points!{% endblock %}
+
+{% block meta_keywords %}pong game room, online pong match, play pong live, multiplayer pong game, WebSocket gaming, real-time pong, browser game, arcade game{% endblock %}
+
+{% block og_title %}Pong Game Room {{ room_id }} | Join and Play Now! | AI Slop{% endblock %}
+{% block og_description %}Join this private Pong game room and challenge your opponent in real-time. Use your reflexes to win in this classic arcade game with a futuristic twist.{% endblock %}
+{% block og_type %}game{% endblock %}
+
+{% block schema_type %}GamePlayMode{% endblock %}
+{% block additional_schema %}
+,"gameLocation": {
+    "@type": "VirtualLocation",
+    "name": "AI Slop Pong Game Room {{ room_id }}"
+},
+"accessMode": "visual",
+"accessibilityHazard": "noFlashingHazard",
+"gamePlatform": "Web Browser"
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">

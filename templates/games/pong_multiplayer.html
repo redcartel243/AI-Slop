@@ -1,7 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}AI Slop - Multiplayer Pong{% endblock %}
+{% block title %}AI Slop - Multiplayer Pong | Play Online With Others{% endblock %}
+
+{% block meta_description %}Play real-time multiplayer Pong online with friends or random opponents. No registration required, fast matchmaking, and private game rooms available. Challenge your reflexes in this classic arcade game!{% endblock %}
+
+{% block meta_keywords %}multiplayer pong, online pong game, play pong with friends, real-time pong, WebSocket games, retro arcade games, browser-based pong, no registration games{% endblock %}
+
+{% block og_title %}Multiplayer Pong - Real-time Online Game | AI Slop{% endblock %}
+{% block og_description %}Challenge other players in real-time Pong matches. Create private rooms or find opponents through our matchmaking system. No registration needed!{% endblock %}
+{% block og_type %}game{% endblock %}
+
+{% block schema_type %}VideoGame{% endblock %}
+{% block additional_schema %}
+,"applicationCategory": "Game",
+"operatingSystem": "Web Browser",
+"gamePlatform": "Web Browser",
+"genre": "Arcade",
+"numberOfPlayers": {
+    "@type": "QuantitativeValue",
+    "minValue": 2,
+    "maxValue": 2
+}
+{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/futuristic.css' %}">

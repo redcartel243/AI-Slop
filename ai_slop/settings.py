@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 
+# Site ID for django.contrib.sites
+SITE_ID = 1
+
 
 # Application definition
 
@@ -39,6 +42,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sitemaps",  # For generating sitemaps
+    "django.contrib.sites",     # Required for sitemaps
     
     # Third-party apps
     "crispy_forms",

@@ -15,6 +15,7 @@ AI Slop is a Django-based website where users can share and discover projects bu
 - **Blog System**: Read and write articles about AI technology
 - **Mini-Games**: Play retro games like Pong with AI opponents or other players in real-time
 - **Responsive Design**: Works on desktop and mobile devices
+- **SEO Optimized**: Structured data, Open Graph tags, canonical URLs, and sitemaps for better search visibility
 
 ## Mini-Games
 
@@ -37,6 +38,21 @@ Take a break and enjoy our browser-based games:
 - **Asynchronous Consumers**: Handle game state and player connections efficiently
 - **In-memory Channel Layer**: Process game data with minimal latency
 - **Canvas-based Rendering**: Smooth animations and responsive controls
+- **Structured Data**: JSON-LD implementation for better search engine understanding
+- **Social Sharing**: Open Graph and Twitter Card support for improved sharing experience
+
+## SEO Enhancements
+
+This project implements various SEO best practices:
+
+- **Meta Tags**: Comprehensive meta tags for improved search engine indexing
+- **Structured Data**: Schema.org JSON-LD markup for rich search results
+- **Open Graph Tags**: Enhanced social media sharing capabilities
+- **Sitemap**: XML sitemap for better content discovery by search engines
+- **Canonical URLs**: Prevents duplicate content issues
+- **Semantic HTML**: Proper use of HTML5 semantic elements
+- **Optimized Page Titles**: Clear, descriptive titles with relevant keywords
+- **Mobile Optimization**: Responsive design for all devices
 
 ## Getting Started
 
