@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Slop - Showcasing AI-Assisted Projects{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/animations.css' %}">
+<link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- ==================== HERO SECTION ==================== -->
+<section class="futuristic-hero cyber-bg">
+    <div class="particles-container"></div>
+    <div class="grid-lines"></div>
+    <div class="hex-grid"></div>
+    <div class="data-stream"></div>
+    
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <!-- ===== Hero Text Content ===== -->
+                <h1 class="cyber-glitch mb-4" data-text="AI Slop">AI Slop</h1>
+                <h2 class="neon-text mb-4">Human-AI Collaboration</h2>
+                <div class="terminal-text mb-4" data-text="Building the future, one project at a time...">Building the future, one project at a time...</div>
+                <p class="lead text-light mb-4">AI Slop showcases projects built with AI assistance, demonstrating how humans and AI can work together to create amazing things.</p>
+                <!-- ===== Hero Buttons ===== -->
+                <div class="d-flex gap-3">
+                    <a href="{% url 'projects:project_list' %}" class="cyber-button">Explore Projects</a>
+                    <a href="{% url 'blog:post_list' %}" class="glow-on-hover">Read Blog</a>
+                </div>
+            </div>
+            <!-- ===== Hero Image ===== -->
+            <div class="col-lg-6 d-none d-lg-block parallax-container">
+                <div class="ar-frame scanner">
+                    <div class="ar-corner-tl"></div>
+                    <div class="ar-corner-tr"></div>
+                    <div class="ar-corner-bl"></div>
+                    <div class="ar-corner-br"></div>
+                    <img src="{% static 'images/hero-image.svg' %}" alt="AI Collaboration" class="img-fluid hologram parallax-element" data-depth="20">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ==================== END HERO SECTION ==================== -->
+
+<!-- ==================== CTA SECTION ==================== -->
+<section class="py-5 cyber-bg digital-noise">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- ===== CTA Left Content ===== -->
+            <div class="col-lg-7">
+                <h2 class="mb-3 neon-text">Share Your AI-Assisted Project</h2>
+                <p class="lead mb-4 text-light">Have you built something amazing with AI assistance? Share it with our community and showcase your work!</p>
+                <ul class="mb-4 pulse text-light">
+                    <li class="mb-2">Highlight your collaboration with AI tools</li>
+                    <li class="mb-2">Get feedback from other creators</li>
+                    <li class="mb-2">Inspire others with your innovative approach</li>
+                </ul>
+                <!-- ===== CTA Buttons ===== -->
+                {% if user.is_authenticated %}
+                    <a href="{% url 'projects:submit_project' %}" class="cyber-button">
+                        <i class="fas fa-plus me-2"></i> Submit Your Project
+                    </a>
+                {% else %}
+                    <div>
+                        <a href="{% url 'login' %}" class="cyber-button me-2">Login</a>
+                        <span class="text-light">or</span>
+                        <a href="{% url 'register' %}" class="glow-on-hover ms-2">Register</a>
+                        <span class="ms-2 text-light">to submit your project</span>
+                    </div>
+                {% endif %}
+            </div>
+            <!-- ===== CTA Card ===== -->
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <div class="cyber-card p-4 scanner">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-rocket fa-3x text-primary pulse"></i>
+                    </div>
+                    <h3 class="h4 text-center mb-3 text-light">Why Share Your Project?</h3>
+                    <!-- ===== CTA Card Items ===== -->
+                    <div class="d-flex mb-3">
+                        <div class="me-3 text-primary">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="h6 mb-1 text-light">Showcase Your Skills</h4>
+                            <p class="small text-light-50 mb-0">Demonstrate your ability to work effectively with AI tools.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="me-3 text-primary">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="h6 mb-1 text-light">Connect with Others</h4>
+                            <p class="small text-light-50 mb-0">Join a community of creators using AI in innovative ways.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="me-3 text-primary">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="h6 mb-1 text-light">Inspire Innovation</h4>
+                            <p class="small text-light-50 mb-0">Help others see the potential of human-AI collaboration.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ==================== END CTA SECTION ==================== -->
+
+<!-- ==================== FEATURED PROJECTS SECTION ==================== -->
+<section class="py-5 cyber-bg">
+    <div class="container">
+        <!-- ===== Section Header ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4 cyber-glitch" data-text="Featured Projects">Featured Projects</h2>
+                <p class="text-center text-light mb-5">Check out some of the best AI-assisted projects I've built.</p>
+            </div>
+        </div>
+        
+        <!-- ===== Featured Projects Grid ===== -->
+        <div class="row">
+            {% if featured_projects %}
+                {% for project in featured_projects %}
+                    <!-- ===== Featured Project Card ===== -->
+                    <div class="col-md-4">
+                        <div class="cyber-card tilt-card h-100 scroll-animation">
+                            <div class="ar-corner-tl"></div>
+                            <div class="ar-corner-tr"></div>
+                            <div class="ar-corner-bl"></div>
+                            <div class="ar-corner-br"></div>
+                            {% if project.featured_image %}
+                                <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}">
+                            {% else %}
+                                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-code fa-3x text-primary"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body text-light">
+                                <h5 class="card-title">{{ project.title }}</h5>
+                                <p class="card-text text-light-50">{{ project.description|truncatechars:120 }}</p>
+                                <div class="mt-3">
+                                    {% for tool in project.ai_tools.all %}
+                                        <span class="badge bg-primary me-1 pulse">{{ tool.name }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="card-footer border-0 bg-transparent">
+                                <a href="{{ project.get_absolute_url }}" class="cyber-button btn-sm">View Project</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- ===== No Projects Message ===== -->
+                <div class="col-12 text-center">
+                    <p class="text-light">No featured projects yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- ===== View All Button ===== -->
+        <div class="text-center mt-4">
+            <a href="{% url 'projects:project_list' %}" class="cyber-button">View All Projects</a>
+        </div>
+    </div>
+</section>
+<!-- ==================== END FEATURED PROJECTS SECTION ==================== -->
+
+<!-- ==================== LATEST PROJECTS SECTION ==================== -->
+<section class="py-5 cyber-bg digital-noise">
+    <div class="container">
+        <!-- ===== Section Header ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4 neon-text">Latest Projects</h2>
+                <p class="text-center text-light mb-5">The most recent AI-assisted projects in my portfolio.</p>
+            </div>
+        </div>
+        
+        <!-- ===== Latest Projects Grid ===== -->
+        <div class="row">
+            {% if latest_projects %}
+                {% for project in latest_projects %}
+                    <!-- ===== Latest Project Card ===== -->
+                    <div class="col-md-4 col-lg-4 mb-4">
+                        <div class="cyber-card tilt-card h-100 scroll-animation">
+                            <div class="ar-corner-tl"></div>
+                            <div class="ar-corner-tr"></div>
+                            <div class="ar-corner-bl"></div>
+                            <div class="ar-corner-br"></div>
+                            {% if project.featured_image %}
+                                <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}">
+                            {% else %}
+                                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-code fa-3x text-primary"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body text-light">
+                                <h5 class="card-title">{{ project.title }}</h5>
+                                <p class="card-text text-light-50">{{ project.description|truncatechars:100 }}</p>
+                            </div>
+                            <div class="card-footer border-0 bg-transparent">
+                                <a href="{{ project.get_absolute_url }}" class="glow-on-hover btn-sm">View Project</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- ===== No Projects Message ===== -->
+                <div class="col-12 text-center">
+                    <p class="text-light">No projects yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+<!-- ==================== END LATEST PROJECTS SECTION ==================== -->
+
+<!-- ==================== BLOG POSTS SECTION ==================== -->
+<section class="py-5 cyber-bg">
+    <div class="container">
+        <!-- ===== Section Header ===== -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="text-center mb-4 cyber-glitch" data-text="Latest Insights">Latest Insights</h2>
+                <p class="text-center text-light mb-5">Read about my experiences and learnings from working with AI.</p>
+            </div>
+        </div>
+        
+        <!-- ===== Blog Posts Grid ===== -->
+        <div class="row">
+            {% if latest_posts %}
+                {% for post in latest_posts %}
+                    <!-- ===== Blog Post Card ===== -->
+                    <div class="col-md-4">
+                        <div class="cyber-card tilt-card h-100 scroll-animation">
+                            <div class="ar-corner-tl"></div>
+                            <div class="ar-corner-tr"></div>
+                            <div class="ar-corner-bl"></div>
+                            <div class="ar-corner-br"></div>
+                            {% if post.featured_image %}
+                                <img src="{{ post.featured_image.url }}" class="card-img-top" alt="{{ post.title }}">
+                            {% else %}
+                                <div class="card-img-top bg-dark d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-newspaper fa-3x text-primary"></i>
+                                </div>
+                            {% endif %}
+                            <div class="card-body text-light">
+                                <h5 class="card-title">{{ post.title }}</h5>
+                                <p class="card-text text-light-50">{{ post.content|striptags|truncatechars:120 }}</p>
+                            </div>
+                            <div class="card-footer border-0 bg-transparent d-flex justify-content-between align-items-center">
+                                <span class="blog-meta text-light-50">{{ post.created_date|date:"M d, Y" }}</span>
+                                <a href="{{ post.get_absolute_url }}" class="cyber-button btn-sm">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- ===== No Posts Message ===== -->
+                <div class="col-12 text-center">
+                    <p class="text-light">No blog posts yet. Check back soon!</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- ===== View All Button ===== -->
+        <div class="text-center mt-4">
+            <a href="{% url 'blog:post_list' %}" class="glow-on-hover">View All Posts</a>
+        </div>
+    </div>
+</section>
+<!-- ==================== END BLOG POSTS SECTION ==================== -->
+{% endblock %}
+
+{% block extra_js %}
+<!-- ==================== ANIMATION SCRIPTS ==================== -->
+<script src="{% static 'js/animations.js' %}"></script>
+<script src="{% static 'js/futuristic.js' %}"></script>
+<script>
+    // Initialize glitch effect
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AR frames
+        if (typeof initARFrames === 'function') {
+            initARFrames();
+        }
+        
+        // Initialize cyber buttons
+        if (typeof initCyberButtons === 'function') {
+            initCyberButtons();
+        }
+        
+        // Create digital rain in hero section
+        const heroSection = document.querySelector('.futuristic-hero');
+        if (heroSection && typeof createDigitalRain === 'function') {
+            createDigitalRain(heroSection);
+        }
+    });
+</script>
+<!-- ==================== END ANIMATION SCRIPTS ==================== -->
+{% endblock %} 

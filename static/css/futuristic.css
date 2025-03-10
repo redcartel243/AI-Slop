@@ -1,0 +1,403 @@
+/* 
+ * AI Slop - Futuristic Design Elements
+ * Advanced sci-fi inspired UI components and animations
+ */
+
+/* ==================== FUTURISTIC VARIABLES ==================== */
+:root {
+  --neon-blue: #4e6ef2;
+  --neon-purple: #7a5af8;
+  --neon-cyan: #00f0ff;
+  --neon-pink: #ff00c8;
+  --dark-bg: #0f172a;
+  --darker-bg: #080c14;
+  --terminal-green: #00ff00;
+  --hologram-blue: rgba(0, 240, 255, 0.2);
+  --scanner-line: rgba(0, 240, 255, 0.5);
+}
+
+/* ==================== FUTURISTIC BACKGROUNDS ==================== */
+.cyber-bg {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(78, 110, 242, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(122, 90, 248, 0.05) 0%, transparent 20%),
+    linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+  position: relative;
+  overflow: visible;
+}
+
+.cyber-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, var(--darker-bg) 21px, transparent 1%) center,
+    linear-gradient(var(--darker-bg) 21px, transparent 1%) center,
+    rgba(78, 110, 242, 0.1);
+  background-size: 22px 22px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.cyber-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 90%, var(--dark-bg));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ==================== HOLOGRAPHIC ELEMENTS ==================== */
+.hologram {
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.hologram::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: var(--hologram-blue);
+  filter: blur(20px);
+  opacity: 0;
+  z-index: -1;
+  animation: hologram-pulse 4s infinite;
+  pointer-events: none;
+}
+
+.hologram::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(transparent 0%, var(--scanner-line) 50%, transparent 100%);
+  background-size: 100% 20px;
+  animation: hologram-scan 3s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes hologram-pulse {
+  0%, 100% { opacity: 0; transform: scale(0.95); }
+  50% { opacity: 0.5; transform: scale(1); }
+}
+
+@keyframes hologram-scan {
+  0% { background-position: 0 -100px; }
+  100% { background-position: 0 300px; }
+}
+
+/* ==================== TERMINAL TEXT ==================== */
+.terminal-text {
+  font-family: 'Courier New', monospace;
+  color: var(--terminal-green);
+  text-shadow: 0 0 5px var(--terminal-green);
+  position: relative;
+  display: inline-block;
+}
+
+.terminal-text::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ==================== FUTURISTIC BUTTONS ==================== */
+.cyber-button {
+  position: relative;
+  background: transparent;
+  color: var(--neon-cyan);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px 30px;
+  border: 2px solid var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 1;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.cyber-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.4), transparent);
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+.cyber-button:hover {
+  color: #fff;
+  box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 15px var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.cyber-button:hover::before {
+  left: 100%;
+}
+
+/* ==================== SCANNER EFFECT ==================== */
+.scanner {
+  position: relative;
+  overflow: hidden;
+}
+
+.scanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  z-index: 10;
+  animation: scan 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+/* ==================== DIGITAL NOISE ==================== */
+.digital-noise {
+  position: relative;
+}
+
+.digital-noise::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==================== HEX GRID ==================== */
+.hex-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%234e6ef2' fill-opacity='0.05' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ==================== CYBER CARD ==================== */
+.cyber-card {
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 240, 255, 0.2) inset;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%);
+  z-index: -1;
+}
+
+.cyber-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 240, 255, 0.3) inset;
+  border-color: rgba(0, 240, 255, 0.5);
+}
+
+/* ==================== DATA STREAM ==================== */
+.data-stream {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.data-stream span {
+  position: absolute;
+  color: rgba(0, 240, 255, 0.3);
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1;
+  white-space: nowrap;
+  top: -100px;
+  animation: datafall linear infinite;
+}
+
+@keyframes datafall {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(calc(100vh + 100px));
+    opacity: 0;
+  }
+}
+
+/* ==================== FUTURISTIC HERO ==================== */
+.futuristic-hero {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+/* ==================== GRID LINES ==================== */
+.grid-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ==================== PARALLAX CONTAINER ==================== */
+.parallax-container {
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* ==================== TESSERACT STYLES ==================== */
+.ar-frame {
+  position: relative;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.ar-frame img {
+  transition: transform 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.ar-frame.tesseract-hover {
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+}
+
+.ar-corner-tl, .ar-corner-tr, .ar-corner-bl, .ar-corner-br {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.ar-corner-tl {
+  top: 0;
+  left: 0;
+  border-top: 2px solid var(--neon-cyan);
+  border-left: 2px solid var(--neon-cyan);
+}
+
+.ar-corner-tr {
+  top: 0;
+  right: 0;
+  border-top: 2px solid var(--neon-cyan);
+  border-right: 2px solid var(--neon-cyan);
+}
+
+.ar-corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid var(--neon-cyan);
+  border-left: 2px solid var(--neon-cyan);
+}
+
+.ar-corner-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid var(--neon-cyan);
+  border-right: 2px solid var(--neon-cyan);
+}
+
+.tesseract-hover .ar-corner-tl,
+.tesseract-hover .ar-corner-tr,
+.tesseract-hover .ar-corner-bl,
+.tesseract-hover .ar-corner-br {
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
+@media (max-width: 767.98px) {
+  .cyber-button {
+    padding: 8px 20px;
+    font-size: 14px;
+  }
+  
+  .ar-frame::before,
+  .ar-frame::after {
+    display: none;
+  }
+  
+  .futuristic-hero {
+    min-height: 60vh;
+  }
+} 

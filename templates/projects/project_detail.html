@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.title }} - AI Slop{% endblock %}
+
+{% block meta_description %}{{ project.description|truncatechars:160 }}{% endblock %}
+
+{% block meta_keywords %}AI, {{ project.title }}, {% for tool in project.ai_tools.all %}{{ tool.name }}, {% endfor %}{% for tech in project.technologies.all %}{{ tech.name }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endblock %}
+
+{% block content %}
+<!-- Project Header -->
+<section class="project-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="display-4 mb-3">{{ project.title }}</h1>
+                <p class="lead">{{ project.description }}</p>
+                <div class="mt-4">
+                    {% for tool in project.ai_tools.all %}
+                        <span class="badge bg-primary me-1">{{ tool.name }}</span>
+                    {% endfor %}
+                    
+                    {% for tech in project.technologies.all %}
+                        <span class="badge bg-secondary me-1">{{ tech.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <!-- Featured Image -->
+            {% if project.featured_image %}
+                <div class="project-image mb-4">
+                    <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-fluid">
+                </div>
+            {% endif %}
+            
+            <!-- Project Content -->
+            <div class="project-content">
+                <h2 class="mb-4">Project Overview</h2>
+                <div class="content-body">
+                    {{ project.content|safe }}
+                </div>
+            </div>
+            
+            <!-- Project Gallery -->
+            {% if project.images.all %}
+                <div class="project-gallery">
+                    <h2 class="mb-4">Project Gallery</h2>
+                    <div class="row">
+                        {% for image in project.images.all %}
+                            <div class="col-md-4 mb-4">
+                                <div class="gallery-item">
+                                    <img src="{{ image.image.url }}" alt="{{ image.caption|default:project.title }}" class="img-fluid">
+                                    {% if image.caption %}
+                                        <div class="caption p-2 bg-light">
+                                            <small>{{ image.caption }}</small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Challenges and Learnings -->
+            <div class="row mt-5">
+                {% if project.challenges %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">Challenges</h3>
+                                <p class="card-text">{{ project.challenges|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if project.learnings %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">Learnings</h3>
+                                <p class="card-text">{{ project.learnings|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Project Meta -->
+            <div class="project-meta">
+                <!-- Author Info -->
+                {% if project.user %}
+                    <div class="card mb-4">
+                        <div class="card-header bg-dark text-white">
+                            <h3 class="card-title h5 mb-0">Project Author</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                    <span class="h5 mb-0">{{ project.user.username|slice:":1"|upper }}</span>
+                                </div>
+                                <div>
+                                    <h4 class="h6 mb-1">{{ project.user.username }}</h4>
+                                    <p class="small text-muted mb-0">
+                                        {{ project.user.projects.count }} project{{ project.user.projects.count|pluralize }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Human vs AI Contribution -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title h5 mb-0">Collaboration Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="meta-item">
+                            <h4 class="meta-title">Human Contribution</h4>
+                            <p>{{ project.human_contribution|linebreaks }}</p>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <h4 class="meta-title">AI Contribution</h4>
+                            <p>{{ project.ai_contribution|linebreaks }}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Links -->
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3 class="card-title h5 mb-0">Project Links</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            {% if project.github_link %}
+                                <li class="list-group-item">
+                                    <i class="fab fa-github me-2"></i>
+                                    <a href="{{ project.github_link }}" target="_blank" rel="noopener">GitHub Repository</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% if project.live_link %}
+                                <li class="list-group-item">
+                                    <i class="fas fa-globe me-2"></i>
+                                    <a href="{{ project.live_link }}" target="_blank" rel="noopener">Live Demo</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for tool in project.ai_tools.all %}
+                                {% if tool.website %}
+                                    <li class="list-group-item">
+                                        <i class="fas fa-robot me-2"></i>
+                                        <a href="{{ tool.website }}" target="_blank" rel="noopener">{{ tool.name }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Project Info -->
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 class="card-title h5 mb-0">Project Info</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <strong>Created:</strong> {{ project.created_date|date:"F j, Y" }}
+                            </li>
+                            <li class="list-group-item">
+                                <strong>Last Updated:</strong> {{ project.updated_date|date:"F j, Y" }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related Projects -->
+            {% if related_projects %}
+                <div class="related-projects">
+                    <h3 class="mb-3">Related Projects</h3>
+                    {% for related in related_projects %}
+                        <div class="card mb-3">
+                            {% if related.featured_image %}
+                                <img src="{{ related.featured_image.url }}" class="card-img-top" alt="{{ related.title }}">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ related.title }}</h5>
+                                <p class="card-text">{{ related.description|truncatechars:80 }}</p>
+                                <a href="{{ related.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Project</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,335 @@
+/* 
+ * AI Slop - Custom Styles
+ * A modern, tech-focused design for showcasing AI-assisted projects
+ */
+
+/* ===== Base Styles ===== */
+:root {
+    --primary-color: #4e6ef2;
+    --secondary-color: #6c757d;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --success-color: #28a745;
+    --info-color: #17a2b8;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Roboto', sans-serif;
+}
+
+body {
+    font-family: var(--font-secondary);
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #3a56d4;
+    text-decoration: none;
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #3a56d4;
+    border-color: #3a56d4;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ===== Layout ===== */
+.main-content {
+    min-height: calc(100vh - 300px);
+    padding: 2rem 0;
+}
+
+/* ===== Header ===== */
+.navbar-brand {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+    color: #fff;
+}
+
+/* ===== Hero Section ===== */
+.hero {
+    background: linear-gradient(135deg, #4e6ef2 0%, #7a5af8 100%);
+    color: white;
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.hero p {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+/* ===== Cards ===== */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.card-text {
+    color: #6c757d;
+}
+
+/* ===== Project Cards ===== */
+.project-card .badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.project-card .card-footer {
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 1rem 1.25rem;
+}
+
+/* ===== Project Detail ===== */
+.project-header {
+    padding: 3rem 0;
+    background-color: var(--dark-color);
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.project-image {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.project-meta {
+    margin-bottom: 2rem;
+}
+
+.project-meta .meta-item {
+    margin-bottom: 1rem;
+}
+
+.project-meta .meta-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.project-content {
+    margin-bottom: 3rem;
+}
+
+.project-gallery {
+    margin-top: 3rem;
+}
+
+.gallery-item {
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ===== Blog ===== */
+.blog-card .card-img-top {
+    height: 220px;
+}
+
+.blog-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.blog-meta {
+    font-size: 0.875rem;
+    color: var(--secondary-color);
+}
+
+.blog-content {
+    margin-top: 2rem;
+}
+
+/* ===== Filters ===== */
+.filter-section {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.filter-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.filter-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.filter-list li {
+    margin-bottom: 0.5rem;
+}
+
+.filter-list a {
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.filter-list a:hover,
+.filter-list a.active {
+    color: var(--primary-color);
+}
+
+.filter-list .badge {
+    float: right;
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+/* ===== Pagination ===== */
+.pagination {
+    margin-top: 2rem;
+}
+
+.page-link {
+    color: var(--primary-color);
+    border: 1px solid #dee2e6;
+    margin: 0 3px;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ===== Footer ===== */
+.footer {
+    background-color: var(--dark-color);
+    color: white;
+}
+
+.footer a {
+    transition: all 0.3s ease;
+}
+
+.footer a:hover {
+    color: white !important;
+}
+
+.social-icons a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-3px);
+}
+
+/* ===== Responsive Styles ===== */
+@media (max-width: 767.98px) {
+    .hero {
+        padding: 3rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 2.25rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .project-header {
+        padding: 2rem 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .card-img-top {
+        height: 180px;
+    }
+    
+    .blog-card .card-img-top {
+        height: 180px;
+    }
+} 

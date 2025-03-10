@@ -1,0 +1,17 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="module" style="margin-bottom: 20px; border: 2px solid #f39c12; border-radius: 5px; padding: 10px; background-color: #fff9e6;">
+    <h2 style="color: #f39c12;">Pending Projects</h2>
+    <p>{% trans "Projects waiting for your approval" %}</p>
+    
+    <p style="margin-top: 10px;">
+        <a href="/admin/projects/project/?status__exact=pending" class="button" style="padding: 8px 15px; background-color: #f39c12; color: white; text-decoration: none; border-radius: 3px; display: inline-block;">
+            <strong>View & Approve Pending Projects</strong>
+        </a>
+    </p>
+</div>
+
+{{ block.super }}
+{% endblock %} 

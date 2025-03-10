@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - AI Slop{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<section class="bg-dark text-white py-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="display-4 mb-3">My Profile</h1>
+                <p class="lead">Manage your account and view your projects</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Messages -->
+    {% if messages %}
+        <div class="row">
+            <div class="col-12">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-lg-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                            <span class="display-4">{{ user.username|slice:":1"|upper }}</span>
+                        </div>
+                        <h4>{{ user.username }}</h4>
+                        <p class="text-muted">Member since {{ user.date_joined|date:"F j, Y" }}</p>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-envelope me-2"></i> Email</span>
+                            <span>{{ user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-check-circle me-2"></i> Email Verified</span>
+                            <span>
+                                {% if user.profile.email_verified %}
+                                    <span class="badge bg-success">Verified</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Not Verified</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-folder me-2"></i> Projects</span>
+                            <span class="badge bg-primary rounded-pill">{{ projects.count }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'password_reset' %}" class="btn btn-outline-primary">Change Password</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Projects -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">My Projects</h5>
+                    <a href="{% url 'projects:submit_project' %}" class="btn btn-light btn-sm">
+                        <i class="fas fa-plus me-1"></i> New Project
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if projects %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for project in projects %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if project.featured_image %}
+                                                        <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="me-2" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;">
+                                                    {% else %}
+                                                        <div class="bg-light d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px; border-radius: 4px;">
+                                                            <i class="fas fa-code text-muted"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <h6 class="mb-0">{{ project.title }}</h6>
+                                                        <small class="text-muted">{{ project.description|truncatechars:50 }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge {% if project.status == 'approved' %}bg-success{% elif project.status == 'pending' %}bg-warning{% else %}bg-danger{% endif %}">
+                                                    {{ project.get_status_display }}
+                                                </span>
+                                            </td>
+                                            <td>{{ project.created_date|date:"M d, Y" }}</td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    {% if project.status == 'approved' %}
+                                                        <a href="{% url 'projects:project_detail' project.slug %}" class="btn btn-outline-primary">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                    {% if project.status != 'approved' %}
+                                                        <a href="{% url 'projects:edit_project' project.slug %}" class="btn btn-outline-secondary">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="{% url 'projects:delete_project' project.slug %}" class="btn btn-outline-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fas fa-folder-open fa-4x text-muted"></i>
+                            </div>
+                            <h4>No Projects Yet</h4>
+                            <p class="text-muted mb-4">You haven't submitted any projects yet.</p>
+                            <a href="{% url 'projects:submit_project' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i> Submit Your First Project
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

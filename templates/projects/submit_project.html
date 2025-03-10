@@ -1,0 +1,476 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - AI Slop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    .form-section {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .form-section h3 {
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .help-text {
+        font-size: 0.875rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    
+    .required-field label:after {
+        content: " *";
+        color: #dc3545;
+    }
+    
+    .formset-item {
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+    }
+    
+    .delete-row {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        color: #dc3545;
+        cursor: pointer;
+    }
+    
+    .add-row {
+        margin-top: 1rem;
+    }
+    
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding-left: 0;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+    }
+    
+    /* AI Tools Checkbox Styling */
+    .ai-tools-list {
+        max-height: 300px;
+        overflow-y: auto;
+        border: 1px solid #dee2e6;
+        border-radius: 0.25rem;
+        padding: 1rem;
+    }
+    
+    .ai-tools-list ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    
+    .ai-tools-list li {
+        margin-bottom: 0.5rem;
+    }
+    
+    .ai-tools-list label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        cursor: pointer;
+    }
+    
+    .ai-tools-list input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<section class="bg-dark text-white py-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="display-4 mb-3">{{ title }}</h1>
+                <p class="lead">Share your AI-assisted project with the community</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Form Instructions -->
+            <div class="alert alert-info mb-4">
+                <h4 class="alert-heading"><i class="bi bi-info-circle-fill me-2"></i>Before You Submit</h4>
+                <p>Please provide detailed information about your project and how AI tools were used in its development. All submissions will be reviewed before being published.</p>
+                <hr>
+                <p class="mb-0">Fields marked with an asterisk (*) are required.</p>
+            </div>
+            
+            <!-- Submission Form -->
+            <form method="post" enctype="multipart/form-data" id="project-form">
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h3>Basic Information</h3>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.title.id_for_label }}" class="col-sm-3 col-form-label">Project Title</label>
+                        <div class="col-sm-9">
+                            {{ form.title }}
+                            <div class="help-text">{{ form.title.help_text }}</div>
+                            {% if form.title.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.title.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.description.id_for_label }}" class="col-sm-3 col-form-label">Description</label>
+                        <div class="col-sm-9">
+                            {{ form.description }}
+                            <div class="help-text">{{ form.description.help_text }}</div>
+                            {% if form.description.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.description.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.featured_image.id_for_label }}" class="col-sm-3 col-form-label">Featured Image</label>
+                        <div class="col-sm-9">
+                            {{ form.featured_image }}
+                            <div class="help-text">{{ form.featured_image.help_text }}</div>
+                            {% if form.featured_image.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.featured_image.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% if project and project.featured_image %}
+                                <div class="mt-2">
+                                    <p>Current image:</p>
+                                    <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-thumbnail" style="max-height: 150px;">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Details -->
+                <div class="form-section">
+                    <h3>Project Details</h3>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.content.id_for_label }}" class="col-sm-3 col-form-label">Project Content</label>
+                        <div class="col-sm-9">
+                            {{ form.content }}
+                            <div class="help-text">{{ form.content.help_text }}</div>
+                            {% if form.content.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.content.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.technologies.id_for_label }}" class="col-sm-3 col-form-label">Technologies Used</label>
+                        <div class="col-sm-9">
+                            {{ form.technologies }}
+                            <div class="help-text">{{ form.technologies.help_text }}</div>
+                            {% if form.technologies.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.technologies.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.github_link.id_for_label }}" class="col-sm-3 col-form-label">GitHub Repository</label>
+                        <div class="col-sm-9">
+                            {{ form.github_link }}
+                            <div class="help-text">{{ form.github_link.help_text }}</div>
+                            {% if form.github_link.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.github_link.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.live_link.id_for_label }}" class="col-sm-3 col-form-label">Live Demo</label>
+                        <div class="col-sm-9">
+                            {{ form.live_link }}
+                            <div class="help-text">{{ form.live_link.help_text }}</div>
+                            {% if form.live_link.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.live_link.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Collaboration -->
+                <div class="form-section">
+                    <h3>AI Collaboration</h3>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.ai_tools_list.id_for_label }}" class="col-sm-3 col-form-label">AI Tools Used</label>
+                        <div class="col-sm-9">
+                            <div class="ai-tools-list">
+                                {{ form.ai_tools_list }}
+                            </div>
+                            <div class="help-text">{{ form.ai_tools_list.help_text }}</div>
+                            {% if form.ai_tools_list.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.ai_tools_list.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.new_ai_tool.id_for_label }}" class="col-sm-3 col-form-label">New AI Tool</label>
+                        <div class="col-sm-9">
+                            {{ form.new_ai_tool }}
+                            <div class="help-text">{{ form.new_ai_tool.help_text }}</div>
+                            {% if form.new_ai_tool.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.new_ai_tool.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.new_ai_tool_website.id_for_label }}" class="col-sm-3 col-form-label">New AI Tool Website</label>
+                        <div class="col-sm-9">
+                            {{ form.new_ai_tool_website }}
+                            <div class="help-text">{{ form.new_ai_tool_website.help_text }}</div>
+                            {% if form.new_ai_tool_website.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.new_ai_tool_website.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.human_contribution.id_for_label }}" class="col-sm-3 col-form-label">Human Contribution</label>
+                        <div class="col-sm-9">
+                            {{ form.human_contribution }}
+                            <div class="help-text">{{ form.human_contribution.help_text }}</div>
+                            {% if form.human_contribution.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.human_contribution.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3 required-field">
+                        <label for="{{ form.ai_contribution.id_for_label }}" class="col-sm-3 col-form-label">AI Contribution</label>
+                        <div class="col-sm-9">
+                            {{ form.ai_contribution }}
+                            <div class="help-text">{{ form.ai_contribution.help_text }}</div>
+                            {% if form.ai_contribution.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.ai_contribution.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Challenges and Learnings -->
+                <div class="form-section">
+                    <h3>Challenges and Learnings</h3>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.challenges.id_for_label }}" class="col-sm-3 col-form-label">Challenges</label>
+                        <div class="col-sm-9">
+                            {{ form.challenges }}
+                            <div class="help-text">{{ form.challenges.help_text }}</div>
+                            {% if form.challenges.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.challenges.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label for="{{ form.learnings.id_for_label }}" class="col-sm-3 col-form-label">Learnings</label>
+                        <div class="col-sm-9">
+                            {{ form.learnings }}
+                            <div class="help-text">{{ form.learnings.help_text }}</div>
+                            {% if form.learnings.errors %}
+                                <ul class="errorlist">
+                                    {% for error in form.learnings.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional Images -->
+                <div class="form-section">
+                    <h3>Additional Images</h3>
+                    <p class="text-muted mb-4">You can add up to 5 additional images to showcase your project.</p>
+                    
+                    {{ formset.management_form }}
+                    
+                    <div id="formset-container">
+                        {% for form in formset.forms %}
+                            <div class="formset-item">
+                                {% if form.instance.pk %}
+                                    <div class="mb-3">
+                                        <img src="{{ form.instance.image.url }}" alt="{{ form.instance.caption }}" class="img-thumbnail" style="max-height: 150px;">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Image</label>
+                                    <div class="col-sm-9">
+                                        {{ form.image }}
+                                        {% if form.image.errors %}
+                                            <ul class="errorlist">
+                                                {% for error in form.image.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <label class="col-sm-3 col-form-label">Caption</label>
+                                    <div class="col-sm-9">
+                                        {{ form.caption }}
+                                        {% if form.caption.errors %}
+                                            <ul class="errorlist">
+                                                {% for error in form.caption.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                {% if form.instance.pk %}
+                                    {{ form.id }}
+                                {% endif %}
+                                
+                                <div class="delete-row-container">
+                                    {{ form.DELETE }}
+                                    <label for="{{ form.DELETE.id_for_label }}" class="delete-row">
+                                        <i class="bi bi-trash"></i> Remove
+                                    </label>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Submit Buttons -->
+                <div class="d-flex justify-content-between mt-4 mb-5">
+                    <a href="{% url 'projects:my_projects' %}" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Submit Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle delete checkboxes
+        const deleteCheckboxes = document.querySelectorAll('input[type="checkbox"][name$="-DELETE"]');
+        deleteCheckboxes.forEach(function(checkbox) {
+            // Hide the checkbox
+            checkbox.style.display = 'none';
+            
+            // Find the delete button for this checkbox
+            const deleteButton = checkbox.parentElement.querySelector('.delete-row');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', function() {
+                    checkbox.checked = true;
+                    const formsetItem = checkbox.closest('.formset-item');
+                    formsetItem.style.display = 'none';
+                });
+            }
+        });
+        
+        // Improve AI tools checkboxes styling
+        const aiToolsContainer = document.querySelector('.ai-tools-list');
+        if (aiToolsContainer) {
+            const checkboxes = aiToolsContainer.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(function(checkbox) {
+                // Add Bootstrap custom checkbox styling
+                checkbox.classList.add('form-check-input');
+                
+                // Wrap each checkbox in a div for better styling
+                const label = checkbox.closest('label');
+                if (label) {
+                    label.classList.add('form-check-label');
+                    
+                    // Create a wrapper div
+                    const wrapper = document.createElement('div');
+                    wrapper.classList.add('form-check');
+                    
+                    // Move the checkbox and label into the wrapper
+                    const parent = label.parentNode;
+                    parent.insertBefore(wrapper, label);
+                    wrapper.appendChild(label);
+                }
+            });
+        }
+    });
+</script>
+{% endblock %} 

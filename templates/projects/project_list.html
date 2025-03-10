@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}Projects - AI Slop{% endblock %}
+
+{% block meta_description %}Browse AI-assisted projects showcasing the power of human-AI collaboration.{% endblock %}
+
+{% block content %}
+<!-- Projects Header -->
+<section class="bg-dark text-white py-5 mb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto text-center">
+                <h1 class="display-4 mb-3">AI-Assisted Projects</h1>
+                <p class="lead">Browse through projects built with AI assistance, showcasing the power of human-AI collaboration.</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'projects:submit_project' %}" class="btn btn-primary mt-3">
+                        <i class="fas fa-plus me-2"></i> Submit Your Project
+                    </a>
+                {% else %}
+                    <div class="mt-3">
+                        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+                        <span class="text-light">or</span>
+                        <a href="{% url 'register' %}" class="btn btn-primary ms-2">Register</a>
+                        <span class="text-light ms-2">to submit your own project</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-lg-3 mb-4">
+            <div class="filter-section">
+                <h4 class="filter-title">AI Tools</h4>
+                <ul class="filter-list">
+                    <li>
+                        <a href="{% url 'projects:project_list' %}" {% if not current_tool %}class="active"{% endif %}>
+                            All Tools
+                        </a>
+                    </li>
+                    {% for tool in ai_tools %}
+                        <li>
+                            <a href="{% url 'projects:project_list' %}?tool={{ tool.name|lower }}" {% if current_tool == tool.name|lower %}class="active"{% endif %}>
+                                {{ tool.name }}
+                                <span class="badge">{{ tool.projects.count }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="filter-section">
+                <h4 class="filter-title">Technologies</h4>
+                <ul class="filter-list">
+                    <li>
+                        <a href="{% url 'projects:project_list' %}" {% if not current_tag %}class="active"{% endif %}>
+                            All Technologies
+                        </a>
+                    </li>
+                    {% for tag in tags %}
+                        <li>
+                            <a href="{% url 'projects:project_list' %}?tag={{ tag.slug }}" {% if current_tag == tag.slug %}class="active"{% endif %}>
+                                {{ tag.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Submit Your Project CTA -->
+            <div class="filter-section bg-light border-start border-5 border-primary">
+                <h4 class="filter-title">Share Your Work</h4>
+                <p>Have you built something amazing with AI assistance? Share it with the community!</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'projects:submit_project' %}" class="btn btn-primary w-100">
+                        <i class="fas fa-plus me-2"></i> Submit Your Project
+                    </a>
+                {% else %}
+                    <p class="small text-muted mb-2">You need to be logged in to submit a project.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+                        <a href="{% url 'register' %}" class="btn btn-outline-secondary">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Projects Grid -->
+        <div class="col-lg-9">
+            <div class="row">
+                {% if projects %}
+                    {% for project in projects %}
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card project-card h-100">
+                                {% if project.featured_image %}
+                                    <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}">
+                                {% else %}
+                                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="fas fa-code fa-3x text-muted"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ project.title }}</h5>
+                                    <p class="card-text">{{ project.description|truncatechars:100 }}</p>
+                                    <div class="mt-3">
+                                        {% for tool in project.ai_tools.all %}
+                                            <span class="badge bg-primary me-1">{{ tool.name }}</span>
+                                        {% endfor %}
+                                        
+                                        {% for tech in project.technologies.all %}
+                                            <span class="badge bg-secondary me-1">{{ tech.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ project.get_absolute_url }}" class="btn btn-sm btn-outline-primary">View Project</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h3>No Projects Found</h3>
+                        <p class="text-muted">No projects match your current filter criteria. Try adjusting your filters or check back later.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if projects.paginator.num_pages > 1 %}
+                <nav aria-label="Project pagination" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if projects.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ projects.previous_page_number }}{% if current_tool %}&tool={{ current_tool }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        
+                        {% for i in projects.paginator.page_range %}
+                            {% if projects.number == i %}
+                                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link" href="?page={{ i }}{% if current_tool %}&tool={{ current_tool }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if projects.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ projects.next_page_number }}{% if current_tool %}&tool={{ current_tool }}{% endif %}{% if current_tag %}&tag={{ current_tag }}{% endif %}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
