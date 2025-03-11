@@ -19,6 +19,7 @@ class GameListView(ListView):
         context = super().get_context_data(**kwargs)
         context['featured_games'] = Game.objects.filter(featured=True, is_active=True)
         context['pong_featured'] = True  # Flag to avoid showing Pong twice
+        context['asteroid_dodger_featured'] = True  # Flag for Asteroid Dodger
         return context
 
 class GameDetailView(DetailView):
@@ -70,4 +71,12 @@ def pong_room_view(request, room_id):
         'is_new_room': False,
         'description': 'Play Pong against another player!',
         'instructions': 'Use the mouse or up/down arrow keys to move your paddle. First to 10 points wins!'
+    })
+
+def asteroid_dodger_view(request):
+    """View for the Asteroid Dodger game"""
+    return render(request, 'games/asteroid_dodger.html', {
+        'title': 'Asteroid Dodger',
+        'description': 'Navigate your spaceship through a dangerous asteroid field in this immersive 3D space game.',
+        'instructions': 'Use arrow keys to move your ship and avoid asteroids. Press SPACE to pause/resume the game.'
     })

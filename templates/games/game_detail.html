@@ -1,0 +1,222 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ game.title }} | AI Slop{% endblock %}
+
+{% block meta_description %}{{ game.description }}{% endblock %}
+{% block meta_keywords %}{{ game.title }}, {{ game.get_category_display }}, browser game, online game, AI Slop, mini-game{% endblock %}
+
+{% block og_title %}{{ game.title }} - {{ game.get_category_display }} Game | AI Slop{% endblock %}
+{% block og_description %}{{ game.description }}{% endblock %}
+{% block og_type %}game{% endblock %}
+
+{% block schema_type %}VideoGame{% endblock %}
+{% block additional_schema %}
+,"applicationCategory": "Game",
+"operatingSystem": "Web Browser",
+"gamePlatform": "Web Browser",
+"genre": "{{ game.get_category_display }}",
+"gameMode": "SinglePlayer"
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+<style>
+    .game-header {
+        position: relative;
+        padding: 40px 0;
+        text-align: center;
+        overflow: hidden;
+    }
+    
+    .game-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%),
+            linear-gradient(45deg, rgba(122, 90, 248, 0.1) 0%, transparent 100%);
+        z-index: -1;
+    }
+    
+    .game-title {
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+    
+    .game-category {
+        display: inline-block;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid var(--neon-cyan);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+    
+    .game-container {
+        position: relative;
+        width: 100%;
+        max-width: 1000px;
+        height: 600px;
+        margin: 0 auto;
+        border: 2px solid var(--neon-cyan);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        background-color: #000;
+    }
+    
+    .game-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    
+    .game-info {
+        margin-top: 40px;
+    }
+    
+    .game-description {
+        margin-bottom: 30px;
+    }
+    
+    .game-instructions {
+        background: rgba(0, 240, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.3);
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .game-instructions h3 {
+        color: var(--neon-cyan);
+        margin-bottom: 15px;
+    }
+    
+    .back-button {
+        margin-top: 20px;
+    }
+    
+    .ar-corner-tl, .ar-corner-tr, .ar-corner-bl, .ar-corner-br {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        z-index: 2;
+    }
+    
+    .ar-corner-tl {
+        top: 0;
+        left: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-tr {
+        top: 0;
+        right: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-bl {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-br {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ==================== GAME HEADER ==================== -->
+<section class="game-header cyber-bg">
+    <div class="container">
+        <h1 class="cyber-glitch mb-4" data-text="{{ game.title }}">{{ game.title }}</h1>
+        <div class="game-category">{{ game.get_category_display }}</div>
+        <p class="lead text-light">{{ game.description }}</p>
+    </div>
+</section>
+
+<!-- ==================== GAME SECTION ==================== -->
+<section class="py-5 cyber-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Game Container -->
+                <div class="game-container ar-frame">
+                    <div class="ar-corner-tl"></div>
+                    <div class="ar-corner-tr"></div>
+                    <div class="ar-corner-bl"></div>
+                    <div class="ar-corner-br"></div>
+                    
+                    {% if game.slug == 'asteroid-dodger' %}
+                    <!-- Redirect to the dedicated Asteroid Dodger page -->
+                    <script>
+                        window.location.href = "{% url 'games:asteroid_dodger' %}";
+                    </script>
+                    {% else %}
+                    <!-- Generic game iframe for other games -->
+                    <iframe class="game-iframe" src="about:blank" frameborder="0" allowfullscreen></iframe>
+                    {% endif %}
+                </div>
+                
+                <div class="text-center back-button">
+                    <a href="{% url 'games:game_list' %}" class="cyber-button">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Games
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-8 mx-auto mt-5">
+                <!-- Game Info -->
+                <div class="cyber-card p-4">
+                    <div class="game-info">
+                        <div class="game-description">
+                            <h3 class="game-title">About {{ game.title }}</h3>
+                            <p class="text-light">{{ game.description }}</p>
+                        </div>
+                        
+                        <div class="game-instructions">
+                            <h3><i class="fas fa-gamepad me-2"></i> How to Play</h3>
+                            <p class="text-light">{{ game.instructions }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/futuristic.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize glitch effect
+        if (typeof initGlitchEffect === 'function') {
+            initGlitchEffect();
+        }
+        
+        // Initialize AR frames
+        if (typeof initARFrames === 'function') {
+            initARFrames();
+        }
+    });
+</script>
+{% endblock %} 

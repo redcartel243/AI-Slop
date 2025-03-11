@@ -1,0 +1,486 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Slop - Asteroid Dodger | 3D Space Game with Three.js{% endblock %}
+
+{% block meta_description %}Navigate your spaceship through a dangerous asteroid field in this immersive 3D space game. Dodge asteroids, collect power-ups, and set high scores in this Three.js-powered web game.{% endblock %}
+
+{% block meta_keywords %}asteroid dodger, 3D web game, three.js game, space game, asteroid field, browser game, HTML5 game, WebGL game, spaceship game{% endblock %}
+
+{% block og_title %}Asteroid Dodger - 3D Space Adventure | AI Slop{% endblock %}
+{% block og_description %}Pilot your spaceship through a dangerous asteroid field in this immersive 3D space game. Test your reflexes and see how long you can survive!{% endblock %}
+{% block og_type %}game{% endblock %}
+
+{% block schema_type %}VideoGame{% endblock %}
+{% block additional_schema %}
+,"applicationCategory": "Game",
+"operatingSystem": "Web Browser",
+"gamePlatform": "Web Browser",
+"genre": "Action",
+"gameMode": "SinglePlayer",
+"numberOfPlayers": {
+    "@type": "QuantitativeValue",
+    "minValue": 1,
+    "maxValue": 1
+}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/futuristic.css' %}">
+<style>
+    .game-container {
+        position: relative;
+        width: 100%;
+        max-width: 1000px;
+        height: 600px;
+        margin: 0 auto;
+        border: 2px solid var(--neon-cyan);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+        background-color: #000;
+    }
+    
+    .game-header {
+        position: relative;
+        padding: 40px 0;
+        text-align: center;
+        overflow: hidden;
+    }
+    
+    .game-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%),
+            linear-gradient(45deg, rgba(122, 90, 248, 0.1) 0%, transparent 100%);
+        z-index: -1;
+    }
+    
+    .game-title {
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--neon-cyan);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+    }
+    
+    .back-button {
+        margin-top: 20px;
+    }
+    
+    .ar-corner-tl, .ar-corner-tr, .ar-corner-bl, .ar-corner-br {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        z-index: 2;
+    }
+    
+    .ar-corner-tl {
+        top: 0;
+        left: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-tr {
+        top: 0;
+        right: 0;
+        border-top: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-bl {
+        bottom: 0;
+        left: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-left: 2px solid var(--neon-cyan);
+    }
+    
+    .ar-corner-br {
+        bottom: 0;
+        right: 0;
+        border-bottom: 2px solid var(--neon-cyan);
+        border-right: 2px solid var(--neon-cyan);
+    }
+    
+    .game-ui {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 10;
+    }
+    
+    .game-stats {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-family: 'Share Tech Mono', monospace;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 5px rgba(0, 240, 255, 0.7);
+        font-size: 18px;
+    }
+    
+    .game-lives {
+        display: flex;
+        margin-top: 10px;
+    }
+    
+    .life-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+        background-color: var(--neon-cyan);
+        clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+    
+    .game-message {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        padding: 30px 50px;
+        border: 1px solid var(--neon-cyan);
+        border-radius: 8px;
+        color: var(--neon-cyan);
+        font-family: 'Share Tech Mono', monospace;
+        text-align: center;
+        pointer-events: auto;
+    }
+    
+    .game-message h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    .game-message p {
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+    
+    .game-message .score {
+        font-size: 24px;
+        margin: 20px 0;
+    }
+    
+    .game-message .high-score {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #ff9900;
+    }
+    
+    .game-controls {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    .control-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .control-key {
+        display: inline-block;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid var(--neon-cyan);
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 15px;
+        min-width: 80px;
+        text-align: center;
+        font-family: 'Share Tech Mono', monospace;
+    }
+    
+    .action-btn {
+        position: relative;
+        background: transparent;
+        color: var(--neon-cyan);
+        border: 1px solid var(--neon-cyan);
+        padding: 10px 25px;
+        border-radius: 5px;
+        font-family: 'Share Tech Mono', monospace;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px 5px;
+        pointer-events: auto;
+    }
+    
+    .action-btn:hover {
+        background: rgba(0, 240, 255, 0.2);
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- ==================== GAME HEADER ==================== -->
+<section class="game-header cyber-bg">
+    <div class="container">
+        <h1 class="cyber-glitch mb-4" data-text="ASTEROID DODGER">ASTEROID DODGER</h1>
+        <p class="lead text-light">Navigate through the asteroid field and survive as long as possible!</p>
+    </div>
+</section>
+
+<!-- ==================== GAME SECTION ==================== -->
+<section class="py-5 cyber-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- Game Container -->
+                <div id="asteroid-game" class="game-container ar-frame">
+                    <div class="ar-corner-tl"></div>
+                    <div class="ar-corner-tr"></div>
+                    <div class="ar-corner-bl"></div>
+                    <div class="ar-corner-br"></div>
+                    
+                    <!-- Game UI Overlay -->
+                    <div class="game-ui">
+                        <div class="game-stats">
+                            <div class="game-score">SCORE: <span id="score">0</span></div>
+                            <div class="game-lives" id="lives-container">
+                                <div class="life-icon"></div>
+                                <div class="life-icon"></div>
+                                <div class="life-icon"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Start Game Message -->
+                        <div id="start-message" class="game-message">
+                            <h2>Asteroid Dodger</h2>
+                            <p>Navigate your spaceship through a dangerous asteroid field.</p>
+                            <p>Use arrow keys to move and avoid collisions.</p>
+                            <p>Press SPACE to pause/resume the game.</p>
+                            <button id="start-button" class="action-btn">START GAME</button>
+                        </div>
+                        
+                        <!-- Game Over Message (hidden initially) -->
+                        <div id="game-over-message" class="game-message" style="display: none;">
+                            <h2>Game Over</h2>
+                            <p>Your ship was destroyed!</p>
+                            <div class="score">Score: <span id="final-score">0</span></div>
+                            <div class="high-score">High Score: <span id="high-score">0</span></div>
+                            <button id="restart-button" class="action-btn">PLAY AGAIN</button>
+                        </div>
+                        
+                        <!-- Pause Message (hidden initially) -->
+                        <div id="pause-message" class="game-message" style="display: none;">
+                            <h2>Game Paused</h2>
+                            <p>Press SPACE to resume</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center back-button">
+                    <a href="{% url 'games:game_list' %}" class="cyber-button">
+                        <i class="fas fa-arrow-left me-2"></i> Back to Games
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-8 mx-auto mt-5">
+                <!-- Game Info -->
+                <div class="cyber-card p-4">
+                    <h3 class="game-title">About Asteroid Dodger</h3>
+                    <p class="text-light">Asteroid Dodger is a 3D space game where you pilot a spaceship through a dangerous asteroid field. The game gets progressively harder as your score increases, with more asteroids appearing and moving faster.</p>
+                    
+                    <hr class="my-4" style="border-color: rgba(0, 240, 255, 0.3);">
+                    
+                    <h4 class="neon-text mb-3">Controls</h4>
+                    <div class="game-controls">
+                        <div class="control-item">
+                            <span class="control-key">↑</span>
+                            <span class="text-light">Move Up</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">↓</span>
+                            <span class="text-light">Move Down</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">←</span>
+                            <span class="text-light">Move Left</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">→</span>
+                            <span class="text-light">Move Right</span>
+                        </div>
+                        <div class="control-item">
+                            <span class="control-key">Space</span>
+                            <span class="text-light">Pause/Resume Game</span>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4" style="border-color: rgba(0, 240, 255, 0.3);">
+                    
+                    <h4 class="neon-text mb-3">Game Features</h4>
+                    <ul class="text-light">
+                        <li class="mb-2">Immersive 3D space environment with dynamic starfield</li>
+                        <li class="mb-2">Realistic asteroid physics with random shapes and rotations</li>
+                        <li class="mb-2">Particle explosion effects when colliding with asteroids</li>
+                        <li class="mb-2">Progressive difficulty that increases as you play longer</li>
+                        <li class="mb-2">Local high score tracking to challenge yourself</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/threejs/three.min.js' %}"></script>
+<script src="{% static 'js/threejs/OrbitControls.js' %}"></script>
+<script src="{% static 'js/futuristic.js' %}"></script>
+<script src="{% static 'js/asteroid-dodger.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize glitch effect
+        if (typeof initGlitchEffect === 'function') {
+            initGlitchEffect();
+        }
+        
+        // Initialize AR frames
+        if (typeof initARFrames === 'function') {
+            initARFrames();
+        }
+        
+        // Game elements
+        const scoreElement = document.getElementById('score');
+        const livesContainer = document.getElementById('lives-container');
+        const startMessage = document.getElementById('start-message');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const pauseMessage = document.getElementById('pause-message');
+        const startButton = document.getElementById('start-button');
+        const restartButton = document.getElementById('restart-button');
+        const finalScoreElement = document.getElementById('final-score');
+        const highScoreElement = document.getElementById('high-score');
+        
+        // Initialize game
+        const game = new AsteroidDodger('asteroid-game');
+        
+        // Get high score from local storage
+        let highScore = localStorage.getItem('asteroidDodgerHighScore') || 0;
+        highScoreElement.textContent = highScore;
+        
+        // Update UI based on game events
+        game.container.addEventListener('score', function(e) {
+            scoreElement.textContent = e.detail.score;
+        });
+        
+        game.container.addEventListener('hit', function(e) {
+            // Update lives display
+            while (livesContainer.firstChild) {
+                livesContainer.removeChild(livesContainer.firstChild);
+            }
+            
+            for (let i = 0; i < e.detail.lives; i++) {
+                const lifeIcon = document.createElement('div');
+                lifeIcon.className = 'life-icon';
+                livesContainer.appendChild(lifeIcon);
+            }
+        });
+        
+        game.container.addEventListener('gameover', function(e) {
+            // Show game over message
+            gameOverMessage.style.display = 'block';
+            finalScoreElement.textContent = e.detail.score;
+            
+            // Update high score if needed
+            if (e.detail.score > highScore) {
+                highScore = e.detail.score;
+                localStorage.setItem('asteroidDodgerHighScore', highScore);
+                highScoreElement.textContent = highScore;
+            }
+        });
+        
+        game.container.addEventListener('pause', function() {
+            pauseMessage.style.display = 'block';
+        });
+        
+        game.container.addEventListener('resume', function() {
+            pauseMessage.style.display = 'none';
+        });
+        
+        // Start button
+        startButton.addEventListener('click', function() {
+            startMessage.style.display = 'none';
+            game.start();
+            
+            // Reset lives display
+            while (livesContainer.firstChild) {
+                livesContainer.removeChild(livesContainer.firstChild);
+            }
+            
+            for (let i = 0; i < 3; i++) {
+                const lifeIcon = document.createElement('div');
+                lifeIcon.className = 'life-icon';
+                livesContainer.appendChild(lifeIcon);
+            }
+        });
+        
+        // Restart button
+        restartButton.addEventListener('click', function() {
+            gameOverMessage.style.display = 'none';
+            game.start();
+            
+            // Reset lives display
+            while (livesContainer.firstChild) {
+                livesContainer.removeChild(livesContainer.firstChild);
+            }
+            
+            for (let i = 0; i < 3; i++) {
+                const lifeIcon = document.createElement('div');
+                lifeIcon.className = 'life-icon';
+                livesContainer.appendChild(lifeIcon);
+            }
+        });
+        
+        // Mobile controls (touch events)
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        game.container.addEventListener('touchstart', function(e) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+        
+        game.container.addEventListener('touchmove', function(e) {
+            if (!game.isRunning) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+            
+            // Simulate arrow key presses based on touch movement
+            game.keys.ArrowUp = deltaY < -10;
+            game.keys.ArrowDown = deltaY > 10;
+            game.keys.ArrowLeft = deltaX < -10;
+            game.keys.ArrowRight = deltaX > 10;
+            
+            // Prevent scrolling
+            e.preventDefault();
+        });
+        
+        game.container.addEventListener('touchend', function() {
+            // Reset keys
+            game.keys.ArrowUp = false;
+            game.keys.ArrowDown = false;
+            game.keys.ArrowLeft = false;
+            game.keys.ArrowRight = false;
+        });
+    });
+</script>
+{% endblock %} 

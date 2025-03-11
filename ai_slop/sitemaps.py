@@ -17,7 +17,7 @@ class GamesSitemap(Sitemap):
     changefreq = 'daily'
 
     def items(self):
-        return ['games:pong', 'games:pong_multiplayer']
+        return ['games:pong', 'games:pong_multiplayer', 'games:asteroid_dodger']
     
     def location(self, item):
         return reverse(item) 
